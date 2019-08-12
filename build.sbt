@@ -1,17 +1,13 @@
-val ZioVersion      = "1.0.0-RC11-1"
-val ZIOKafkaVersion = "0.0.1"
-val Specs2Version   = "4.7.0"
-val ArrowVersion    = "0.14.1"
+val ZioVersion    = "1.0.0-RC11-1"
+val Specs2Version = "4.7.0"
 
 resolvers += Resolver.sonatypeRepo("releases")
 resolvers += Resolver.sonatypeRepo("snapshots")
 
 lazy val commonLibs =
   libraryDependencies ++= Seq(
-    "dev.zio"          %% "zio"         % ZioVersion,
-    "dev.zio"          %% "zio-kafka"   % ZIOKafkaVersion,
-    "org.specs2"       %% "specs2-core" % Specs2Version % "test",
-    "org.apache.arrow" % "arrow-vector" % ArrowVersion
+    "dev.zio"    %% "zio"         % ZioVersion,
+    "org.specs2" %% "specs2-core" % Specs2Version % "test"
   )
 
 lazy val commonSettings = Seq(
@@ -24,7 +20,7 @@ lazy val commonSettings = Seq(
   commonLibs
 )
 
-lazy val front = (project in file("zio_front"))
+lazy val front = (project in file("zio-front"))
   .settings(
     name := "front",
     commonSettings
