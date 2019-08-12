@@ -92,6 +92,7 @@ class ArrowSpec extends Specification with DefaultRuntime {
           reader    = deserialize(arr)
           schema    = reader.map(r => r.getVectorSchemaRoot.getSchema)
           empty     = reader.map(r => r.loadNextBatch)
+          _         = println(schema)
           bytesRead = reader.map(r => r.bytesRead)
           rowCount  = reader.map(r => r.getVectorSchemaRoot.getRowCount)
           _         = println(schema)

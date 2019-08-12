@@ -1,12 +1,3 @@
-[submodule "zio-kafka"]
-	path = zio-kafka
-	url = git@github.com:Clover-Group/zio-kafka.git
-[submodule "zio-parquet"]
-	path = zio-parquet
-	url = git@github.com:Clover-Group/zio-parquet.git
 [submodule "zio-serdes"]
 	path = zio-serdes
 	url = https://github.com/Neurodyne/zio-serdes
-[submodule "zio_front"]
-	path = zio_front
-	url = https://github.com/Clover-Group/zio_front

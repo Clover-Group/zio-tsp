@@ -1,5 +1,5 @@
 val ZioVersion      = "1.0.0-RC11-1"
-val EmbKafkaVersion = "2.3.0"
+val ZIOKafkaVersion = "0.0.1"
 val Specs2Version   = "4.7.0"
 val ArrowVersion    = "0.14.1"
 
@@ -8,10 +8,10 @@ resolvers += Resolver.sonatypeRepo("snapshots")
 
 lazy val commonLibs =
   libraryDependencies ++= Seq(
-    "dev.zio"                 %% "zio"            % ZioVersion,
-    "io.github.embeddedkafka" %% "embedded-kafka" % EmbKafkaVersion % "test",
-    "org.specs2"              %% "specs2-core"    % Specs2Version % "test",
-    "org.apache.arrow"        % "arrow-vector"    % ArrowVersion
+    "dev.zio"          %% "zio"         % ZioVersion,
+    "dev.zio"          %% "zio-kafka"   % ZIOKafkaVersion,
+    "org.specs2"       %% "specs2-core" % Specs2Version % "test",
+    "org.apache.arrow" % "arrow-vector" % ArrowVersion
   )
 
 lazy val commonSettings = Seq(
@@ -30,18 +30,6 @@ lazy val front = (project in file("zio_front"))
     commonSettings
   )
 
-lazy val kafka = (project in file("zio-kafka"))
-  .settings(
-    name := "kafka",
-    commonSettings
-  )
-
-//lazy val parquet = (project in file("zio-parquet"))
-//  .settings(
-//    name := "parquet",
-//    commonSettings
-//  )
-
 //lazy val serdes = (project in file("zio-serdes"))
 //  .settings(
 //    name := "serdes",
@@ -53,8 +41,7 @@ lazy val top = (project in file("."))
     name := "tsp",
     commonSettings
   )
-  .dependsOn(kafka, front)
-//.aggregate(kafka, parquet)
+  .dependsOn(front)
 
 scalacOptions --= Seq(
   "-Xfatal-warnings"
