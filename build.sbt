@@ -40,6 +40,7 @@ lazy val dsl = (project in file("zio-dsl"))
   .dependsOn(core)
 
 lazy val top = (project in file("."))
+//.enablePlugins(GitVersioning, JavaAppPackaging, UniversalPlugin)
   .settings(
     name := "tsp",
     commonSettings
