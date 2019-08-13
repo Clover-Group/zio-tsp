@@ -4,3 +4,6 @@
 [submodule "zio-core"]
 	path = zio-core
 	url = https://github.com/Clover-Group/zio-core
+[submodule "zio-dsl"]
+	path = zio-dsl
+	url = https://github.com/Clover-Group/zio-dsl

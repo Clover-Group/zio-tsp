@@ -32,12 +32,18 @@ lazy val core = (project in file("zio-core"))
     commonSettings
   )
 
+lazy val dsl = (project in file("zio-dsl"))
+  .settings(
+    name := "dsl",
+    commonSettings
+  )
+
 lazy val top = (project in file("."))
   .settings(
     name := "tsp",
     commonSettings
   )
-  .dependsOn(front)
+  .dependsOn(front, core, dsl)
 
 scalacOptions --= Seq(
   "-Xfatal-warnings"
@@ -47,3 +53,4 @@ addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.fu
 
 addCommandAlias("fmt", "all scalafmtSbt scalafmtAll test:scalafmtAll")
 addCommandAlias("chk", "all scalafmtSbtCheck scalafmtCheck test:scalafmtCheck")
+addCommandAlias("cvr", "; clean; coverage; test; coverageReport")
