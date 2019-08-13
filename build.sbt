@@ -26,11 +26,11 @@ lazy val front = (project in file("zio-front"))
     commonSettings
   )
 
-//lazy val serdes = (project in file("zio-serdes"))
-//  .settings(
-//    name := "serdes",
-//    commonSettings
-//  )
+lazy val core = (project in file("zio-core"))
+  .settings(
+    name := "core",
+    commonSettings
+  )
 
 lazy val top = (project in file("."))
   .settings(
