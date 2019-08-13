@@ -37,6 +37,7 @@ lazy val dsl = (project in file("zio-dsl"))
     name := "dsl",
     commonSettings
   )
+  .dependsOn(core)
 
 lazy val top = (project in file("."))
   .settings(
