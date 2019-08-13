@@ -23,6 +23,7 @@ import org.apache.arrow.vector.types.pojo.{ ArrowType, Field, FieldType, Schema 
 
 // import zio.serdes.Serdes._
 import ArrowPkg._
+import org.apache.arrow.vector.VectorUnloader
 
 class ArrowSpec extends Specification with DefaultRuntime {
 
@@ -34,7 +35,8 @@ class ArrowSpec extends Specification with DefaultRuntime {
     display parquet file contents     
 
     consume parquet from prod      
-    consume arrow from prod                 $testConsumeArrow
+    consume arrow from prod                 
+    extract arrow data                      $testArrowData
     produce and consume arrow locally       
     killall                                 $killall
 
@@ -78,31 +80,78 @@ class ArrowSpec extends Specification with DefaultRuntime {
     val subscription = Subscription.Topics(Set(slvCfg.topic))
     val cons         = Consumer.make[String, BArr](settings(slvCfg))(Serdes.String, Serdes.ByteArray)
 
-    val globalSchema = testSchema
-    val root         = simpleRoot(globalSchema)
-    root.getFieldVectors.get(0).allocateNew
+    // val globalSchema = testSchema
+    // val root         = simpleRoot(globalSchema)
+    // root.getFieldVectors.get(0).allocateNew
+
+    // val unloader = new VectorUnloader(root)
+    // val batch    = unloader.getRecordBatch
+    // println(batch)
+    // val rbBlock =
 
     unsafeRun(
       cons.use { r =>
         for {
-          _         <- r.subscribe(subscription)
-          batch     <- pollNtimes(5, r)
-          _         <- r.unsubscribe
-          arr       = batch.map(_.value)
-          reader    = deserialize(arr)
-          schema    = reader.map(r => r.getVectorSchemaRoot.getSchema)
-          empty     = reader.map(r => r.loadNextBatch)
-          _         = println(schema)
-          bytesRead = reader.map(r => r.bytesRead)
-          rowCount  = reader.map(r => r.getVectorSchemaRoot.getRowCount)
-          _         = println(schema)
-          _         = println(rowCount)
-          _         = println(bytesRead)
+          _        <- r.subscribe(subscription)
+          batch    <- pollNtimes(5, r)
+          _        <- r.unsubscribe
+          arr      = batch.map(_.value)
+          reader   = deserialize(arr)
+          root     = reader.map(_.getVectorSchemaRoot)
+          unloader = root.map(r => new VectorUnloader(r))
+          schema   = root.map(_.getSchema)
+          block    = unloader.map(_.getRecordBatch.getBuffers)
+          _        = println("Block data")
+          // _         = block.map(_.foreach.println)
+          empty     = reader.map(_.loadNextBatch)
+          bytesRead = reader.map(_.bytesRead)
+          rowCount  = root.map(_.getRowCount)
+          // _         = println(schema)
+          // _         = println(rowCount)
+          // _         = println(bytesRead)
 
         } yield empty === Chunk(true)
       }
     )
 
+    // true === true
+  }
+
+  def testArrowData = {
+
+    val slvCfg = SlaveConfig(
+      server = "37.228.115.243:9092",
+      client = "client5",
+      group = "group5",
+      topic = "batch_record_small_stream_writer"
+    )
+
+    val subscription = Subscription.Topics(Set(slvCfg.topic))
+    val cons         = Consumer.make[String, BArr](settings(slvCfg))(Serdes.String, Serdes.ByteArray)
+
+    val tmp = unsafeRun(
+      cons.use { r =>
+        for {
+          _        <- r.subscribe(subscription)
+          batch    <- pollNtimes(5, r)
+          _        <- r.unsubscribe
+          arr      = batch.map(_.value)
+          reader   = deserialize(arr)
+          root     = reader.map(_.getVectorSchemaRoot)
+          unloader = root.map(r => new VectorUnloader(r))
+          schema   = root.map(_.getSchema)
+          block    = unloader.map(_.getRecordBatch.getBuffers)
+        } yield (schema, block)
+      }
+    )
+
+    val schema = tmp._1
+    val data   = tmp._2
+
+    println(schema)
+    data.map(r => r.println(_))
+
+    true === true
   }
 
   // def testProduceAndConsumeArrow = {
