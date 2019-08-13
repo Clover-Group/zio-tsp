@@ -7,3 +7,6 @@
 [submodule "zio-dsl"]
 	path = zio-dsl
 	url = https://github.com/Clover-Group/zio-dsl
+[submodule "zio-sched"]
+	path = zio-sched
+	url = https://github.com/Clover-Group/zio-sched

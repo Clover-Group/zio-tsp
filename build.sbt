@@ -39,6 +39,13 @@ lazy val dsl = (project in file("zio-dsl"))
   )
   .dependsOn(core)
 
+lazy val sched = (project in file("zio-sched"))
+  .settings(
+    name := "sched",
+    commonSettings
+  )
+  .dependsOn(core, dsl)
+
 lazy val top = (project in file("."))
 //.enablePlugins(GitVersioning, JavaAppPackaging, UniversalPlugin)
   .settings(
