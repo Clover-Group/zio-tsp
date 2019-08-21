@@ -123,7 +123,9 @@ class ArrowSpec extends Specification with DefaultRuntime {
       server = "37.228.115.243:9092",
       client = "client5",
       group = "group5",
-      topic = "batch_record_small_stream_writer"
+     // topic = "batch_record_small_stream_writer"
+      topic = "batch_record_100_285"
+
     )
 
     val subscription = Subscription.Topics(Set(slvCfg.topic))

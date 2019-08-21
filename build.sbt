@@ -20,11 +20,14 @@ lazy val commonSettings = Seq(
   commonLibs
 )
 
+lazy val kafka = ProjectRef(uri("https://github.com/Clover-Group/zio-kafka.git#master"), "zio-kafka")
+
 lazy val front = (project in file("zio-front"))
   .settings(
     name := "front",
     commonSettings
   )
+  .dependsOn(kafka)
 
 lazy val core = (project in file("zio-core"))
   .settings(
@@ -52,7 +55,7 @@ lazy val top = (project in file("."))
     name := "tsp",
     commonSettings
   )
-  .dependsOn(front, core, dsl)
+  .dependsOn(front, core, dsl, kafka)
 
 scalacOptions --= Seq(
   "-Xfatal-warnings"
